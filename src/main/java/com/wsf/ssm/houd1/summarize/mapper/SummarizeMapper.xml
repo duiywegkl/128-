@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wsf.ssm.houd1.summarize.mapper.SummarizeMapper">
+<!--    <resultMap id="selectsummarize" type="com.wsf.ssm.houd1.summarize.model.summarize">-->
+<!--        <result column=""-->
+<!--    </resultMap>-->
+    
+    
+    <select id="selectroute_stats1" resultType="java.lang.Integer" >
+    SELECT
+        count( * )
+    FROM
+        user
+    GROUP BY
+        c_id
+    </select>
+    <select id="selectroute_stats2" resultType="java.lang.Integer"  >
+        SELECT
+            count( * ) AS wb
+        FROM
+            user
+        GROUP BY
+            c_id2
+    </select>
+    <select id="selectusage_stats1" resultType="java.lang.Integer" >
+        select COUNT(*) as 登车人数
+        from user
+        where c_id is not null
+          and
+            c_id2 is not null
+    </select>
+    <select id="selectusage_stats2" resultType="java.lang.Integer" >
+        select COUNT(*) as 未登车人数
+        from user
+        where c_id is  null
+          and
+            c_id2 is  null
+    </select>
+    <select id="selectoverrides" resultType="com.wsf.ssm.houd1.summarize.model.overview" >
+        SELECT c_id,c_time,b_code,r_list,b_seats
+        FROM
+            bus b JOIN classes c
+                       on b.b_id = c.b_id
+                  JOIN route r on c.r_id = r.r_id
+        WHERE c_id in (SELECT c_id FROM user where u_type = 2)
+           or c_id in (SELECT c_id2 FROM user where u_type = 2)
+
+    </select>
+    <select id="selectoverride" resultType="com.wsf.ssm.houd1.summarize.model.overview" parameterType="java.lang.Integer">
+        SELECT u_name,u_phone FROM user where u_type = 2 and (c_id=${c_id} or c_id2 = ${c_id})
+    </select>
+    <select id="selectcun_id" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        SELECT COUNT(*) FROM user where u_type != 2 and (c_id=${c_id} or c_id2 = ${c_id})
+    </select>
+</mapper>

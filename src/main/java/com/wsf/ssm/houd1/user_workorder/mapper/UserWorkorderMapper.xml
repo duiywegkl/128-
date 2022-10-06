@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wsf.ssm.houd1.user_workorder.mapper.UserWorkorderMapper">
+  <resultMap id="BaseResultMap" type="com.wsf.ssm.houd1.user_workorder.model.UserWorkorder">
+    <id column="w_id" jdbcType="INTEGER" property="w_id" />
+    <result column="w_type" jdbcType="INTEGER" property="w_type" />
+    <result column="u_id" jdbcType="INTEGER" property="u_id" />
+    <result column="user_comm" jdbcType="VARCHAR" property="user_comm" />
+    <result column="is_passed" jdbcType="TINYINT" property="is_passed" />
+    <result column="admin_comm" jdbcType="VARCHAR" property="admin_comm" />
+    <result column="w_date" jdbcType="TIMESTAMP" property="w_date" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    w_id, w_type, u_id, user_comm, is_passed, admin_comm, w_date
+  </sql>
+  <select id="selectByExample" parameterType="com.wsf.ssm.houd1.user_workorder.model.UserWorkorderExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from workorder
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from workorder
+    where w_id = #{w_id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from workorder
+    where w_id = #{w_id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wsf.ssm.houd1.user_workorder.model.UserWorkorderExample">
+    delete from workorder
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="w_id" keyProperty="w_id" parameterType="com.wsf.ssm.houd1.user_workorder.model.UserWorkorder" useGeneratedKeys="true">
+    insert into workorder (w_type, u_id, user_comm, 
+      is_passed, admin_comm, w_date
+      )
+    values (#{w_type,jdbcType=INTEGER}, #{u_id,jdbcType=INTEGER}, #{user_comm,jdbcType=VARCHAR},
+      #{is_passed,jdbcType=TINYINT}, #{admin_comm,jdbcType=VARCHAR}, #{w_date,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="w_id" keyProperty="w_id" parameterType="com.wsf.ssm.houd1.user_workorder.model.UserWorkorder" useGeneratedKeys="true">
+    insert into workorder
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="w_type != null">
+        w_type,
+      </if>
+      <if test="u_id != null">
+        u_id,
+      </if>
+      <if test="user_comm != null">
+        user_comm,
+      </if>
+      <if test="is_passed != null">
+        is_passed,
+      </if>
+      <if test="admin_comm != null">
+        admin_comm,
+      </if>
+      <if test="w_date != null">
+        w_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="w_type != null">
+        #{w_type,jdbcType=INTEGER},
+      </if>
+      <if test="u_id != null">
+        #{u_id,jdbcType=INTEGER},
+      </if>
+      <if test="user_comm != null">
+        #{user_comm,jdbcType=VARCHAR},
+      </if>
+      <if test="is_passed != null">
+        #{is_passed,jdbcType=TINYINT},
+      </if>
+      <if test="admin_comm != null">
+        #{admin_comm,jdbcType=VARCHAR},
+      </if>
+      <if test="w_date != null">
+        #{w_date,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.wsf.ssm.houd1.user_workorder.model.UserWorkorderExample" resultType="java.lang.Long">
+    select count(*) from workorder
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update workorder
+    <set>
+      <if test="record.w_id != null">
+        w_id = #{record.w_id,jdbcType=INTEGER},
+      </if>
+      <if test="record.w_type != null">
+        w_type = #{record.w_type,jdbcType=INTEGER},
+      </if>
+      <if test="record.u_id != null">
+        u_id = #{record.u_id,jdbcType=INTEGER},
+      </if>
+      <if test="record.user_comm != null">
+        user_comm = #{record.user_comm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.is_passed != null">
+        is_passed = #{record.is_passed,jdbcType=TINYINT},
+      </if>
+      <if test="record.admin_comm != null">
+        admin_comm = #{record.admin_comm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.w_date != null">
+        w_date = #{record.w_date,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update workorder
+    set w_id = #{record.w_id,jdbcType=INTEGER},
+      w_type = #{record.w_type,jdbcType=INTEGER},
+      u_id = #{record.u_id,jdbcType=INTEGER},
+      user_comm = #{record.user_comm,jdbcType=VARCHAR},
+      is_passed = #{record.is_passed,jdbcType=TINYINT},
+      admin_comm = #{record.admin_comm,jdbcType=VARCHAR},
+      w_date = #{record.w_date,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wsf.ssm.houd1.user_workorder.model.UserWorkorder">
+    update workorder
+    <set>
+      <if test="w_type != null">
+        w_type = #{w_type,jdbcType=INTEGER},
+      </if>
+      <if test="u_id != null">
+        u_id = #{u_id,jdbcType=INTEGER},
+      </if>
+      <if test="user_comm != null">
+        user_comm = #{user_comm,jdbcType=VARCHAR},
+      </if>
+      <if test="is_passed != null">
+        is_passed = #{is_passed,jdbcType=TINYINT},
+      </if>
+      <if test="admin_comm != null">
+        admin_comm = #{admin_comm,jdbcType=VARCHAR},
+      </if>
+      <if test="w_date != null">
+        w_date = #{w_date,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where w_id = #{w_id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wsf.ssm.houd1.user_workorder.model.UserWorkorder">
+    update workorder
+    set w_type = #{w_type,jdbcType=INTEGER},
+      u_id = #{u_id,jdbcType=INTEGER},
+      user_comm = #{user_comm,jdbcType=VARCHAR},
+      is_passed = #{is_passed,jdbcType=TINYINT},
+      admin_comm = #{admin_comm,jdbcType=VARCHAR},
+      w_date = #{w_date,jdbcType=TIMESTAMP}
+    where w_id = #{w_id,jdbcType=INTEGER}
+  </update>
+</mapper>

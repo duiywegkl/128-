@@ -1,0 +1,100 @@
+<!--
+	THIS EXAMPLE WAS DOWNLOADED FROM https://echarts.apache.org/examples/zh/editor.html?c=bar-stack&code=PYBwLglsB2AEC8sDeAoWszGAG0iAXMmuhgE4QDmFApqYQOQCGAHhAM70A0x6L7ACsAjQwtQqhIkwATxDUGbABaMAJsADu9HrAC-xHd3TZqNaCvEHiFcuaKTjAMzAMAzAFIu28hUXPY9ABYPQxIAI2AwTABbV2DtAGMYMEZhABlGUOpsQjBSAFdqfRDmAEFWNkIAbW0JSQxZeX94xlEKYFJpTzrYFRbGKvoAWRgufwAVAtH6AHVqFSmxxTypgDFyKYBlFs286HoAXW09dH2Q6TL2KprtdBk5BgA3RmxJo-JT4jZaCGoK2GrJLVJNBGFFGvQACIQUjUeJgLp1O7g0KMUgIyTUKIgZRsS52bqwBzAeJ5P70L7kX5abqWbq9ZJVFwAJgADJxYC5meyXCyAIzclwBbkATjZHJ53NZh0ktJIQJIILBDAAolEUth0VIGgwUWiQpI2Ml4gBrBgleb6kiY7GMXF_eWSIkkskUn4cG66S3oen9f681ns3lc2C8vmBwXs0XspkS2BM0PSkiy9AO2CK8EAVWgUDg5o4Xvq938us16ENjBNZotHutOLxqfQTtJCm-VI9yZIPqqTIDIYAHEzA8L-XGI3Go-KxS4E0dLan0wwAGoQFTUYCwPOlwvI1Fb8uV_zmre1231j2N4nN_yuts0gtdv0AVjFMcHcbDIcfQpDE85YoCM4ynOHoLv4GzUKi8SKLAyrQBQwjUFuSI6ru959FUfYAGxvqGvJ9pGmHfqGTKYYGmEAOzCmRLJiryj7kSyHzdCedriOehKXi6rbuneHpqqQxqpAhbEErA2AIRsMjGCJonbgwvRKHM1IEh2kgPpUlRIHJ_hRMI9Cesg2n0GqzD6To-yJjKs7XN0oH0AAQikKjLAWyHFqhHq6tMK5gIohCPgW-6mmBEGkFBMFwQhx5YnW9rsU2XGUjxdSqT06H_NhYrkcGDEjtlREshOvJBrR_qMdZgIgaC4IAOJYBQxhIdq7l6h6QUMOBkHQbB8HQIhBYsWeokJS2SXKUBHrqWV4Y4R-QbfkyE4xi-UoVXKVVKv49nCBQTVFvQJaBUawX0J1YXdZFfXRTarH4t0I3Xtx41JmhDIZVlb7kXlRFFbGxXlRNlW2dVDAAPK-bQ-Yem5B0ed07UhV1EW9f1NYxaecXDZxo1us96Cpep2HsgOkYjn2BVUSGoaBqtVknCgOgANxAA
+	请注意，该图表不是 Apache ECharts 官方示例，而是由用户代码生成的。请注意鉴别其内容。
+-->
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%">
+<head>
+  <meta charset="utf-8">
+</head>
+<body style="height: 100%; margin: 0">
+  <div id="column_chart" style="height: 50%; width: 50%"></div>
+
+  
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <!-- Uncomment this line if you want to dataTool extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5/dist/extension/dataTool.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to use gl extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to echarts-stat extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to use map
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/js/china.js"></script>
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/js/world.js"></script>
+  -->
+  <!-- Uncomment these two lines if you want to use bmap extension
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=YOUR_API_KEY"></script>
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5/dist/extension/bmap.min.js"></script>
+  -->
+
+<script type="text/javascript">
+    var column_dom = document.getElementById('column_chart');
+    var column_Chart = echarts.init(column_dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var column_app = {};
+    
+    var option;
+
+    option = {
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow'
+    }
+  },
+  legend: {},
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true
+  },
+  xAxis: [
+    {
+      type: 'category',
+      data: ['学院东门-市政府', '学院东门-纪念馆', '学院南门-信誉楼', '学院北门-第三中学']
+    }
+  ],
+  yAxis: [
+    {
+      type: 'value'
+    }
+  ],
+  series: [
+    {
+      name: '早班人数',
+      type: 'bar',
+      stack: '人数',
+      emphasis: {
+        focus: 'series'
+      },
+      data: [70, 30, 38, 39]
+    },
+    {
+      name: '晚班人数',
+      type: 'bar',
+      stack: '人数',
+      emphasis: {
+        focus: 'series'
+      },
+      data: [40, 30, 50, 39]
+    },
+
+  ]
+};
+
+
+    if (option && typeof option === 'object') {
+      column_Chart.setOption(option);
+    }
+
+    window.addEventListener('resize', column_Chart.resize);
+</script>
+
+</body>
+</html>

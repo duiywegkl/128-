@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>测试获取接口代码</title>
+    <script src="https://unpkg.com/vue@next"></script>
+
+    <!--1 从本地引入js库 锁定版本-->
+    <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+    <!--1.1 引入vue-->
+    <script src="../../public/vue/vue.min.js"></script>
+    <!--1.2 引入element ui-->
+    <script src="../../public/element-ui/index.js"></script>
+    <!--1.3 引入 axios-->
+    <script src="../../public/axios/axios.min.js"></script>
+    <!--1.4 引入 自定义js包-->
+    <script src="../../public/mx-config.js"></script>
+</head>
+
+<body>
+<el-row>
+    <el-col :span="12"><div class="grid-content bg-purple"></div></el-col>
+    <el-col :span="12"><div class="grid-content bg-purple-light"></div></el-col>
+</el-row>
+
+
+<div id="app">
+    {{ mymodel.userId }}
+    {{ mymodel.userName }}
+
+    <button @click="get_axios" name="target">233</button>
+    <el-form :model="mymodel"
+    >
+        <el-form-item prop="userId">
+            <el-input
+                    type="text"
+                    v-model="mymodel.userId"
+                    auto-complete="off">
+            </el-input>
+        </el-form-item>
+        <el-form-item prop="userName">
+            <el-input
+                    type="text"
+                    v-model="mymodel.userName"
+                    auto-complete="off">
+            </el-input>
+        </el-form-item>
+    </el-form>
+</div>
+
+<script>
+    const app = new Vue({
+        el:"#app",
+        data:function(){
+            return{
+                mymodel:{
+                    userId:'333',
+                    userName:"孟",
+                }}
+        },
+        methods:{
+            get_axios:function(formName){
+                axios.get('http://localhost:8000/data1',this.mymodel).then(res => {
+                    let mymodel = res.data;
+                    console.log(res.data)
+                })
+            }
+        }
+    })
+</script>
+
+<script type="text/javascript">
+    var dom = document.getElementById('column_chart');
+    var myColumn_Chart = echarts.init(dom, null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+    });
+    var column_chart = {};
+    var option;
+    option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {},
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data: ['学院东门-市政府', '学院东门-纪念馆', '学院南门-信誉楼', '学院北门-第三中学']
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: '早班人数',
+                type: 'bar',
+                stack: '人数',
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [40, 30, 38, 39]
+            },
+            {
+                name: '晚班人数',
+                type: 'bar',
+                stack: '人数',
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [40, 30, 50, 39]
+            },
+        ]
+    };
+    if (option && typeof option === 'object') {
+        myColumn_Chart.setOption(option);
+    }
+    window.addEventListener('resize', myColumn_Chart.resize);
+</script>
+
+<script type="text/javascript">
+    var dom = document.getElementById('pie_chart');
+    var myPie_Chart = echarts.init(dom, null, {
+        renderer: 'canvas',
+        useDirtyRect: false
+    });
+    var pie_chart = {};
+
+    var option;
+    option = {
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            top: '5%',
+            left: 'center'
+        },
+        series: [
+            {
+                name: '班车登记人数统计',
+                type: 'pie',
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: '40',
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: [
+                    { value: 78, name: '已登记人数' },
+                    { value: 22, name: '未登记人数' },
+                ]
+            }
+        ]
+    };
+
+    if (option && typeof option === 'object') {
+        myPie_Chart.setOption(option);
+    }
+
+    window.addEventListener('resize', myPie_Chart.resize);
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>汇总页面</title>
+
+    <script src="../public/vue/vue.min.js"></script>
+    <!--1.2 引入element ui-->
+    <link rel="stylesheet" href="../public/element-ui/index.css">
+    <script src="../public/element-ui/index.js"></script>
+    <!--1.3 引入 axios-->
+    <script src="../public/axios/axios.min.js"></script>
+<!--    引入 echart-->
+<!--    <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>-->
+    <script type="text/javascript" src="../public/echarts.min.js"></script>
+
+    <!--    &lt;!&ndash;1.4 引入 自定义js包&ndash;&gt;-->
+    <script src="../public/mx-config.js"></script>
+    <style>
+        /*html{*/
+        /*    margin: 10px;*/
+        /*    padding: 100px;*/
+
+        /*}*/
+        body{
+            background-color: #e9eff6;
+        }
+    </style>
+</head>
+
+<body>
+<!-- 汇总页 图表-->
+<div id="chart">
+    <table border="0" style="width: 100%;"
+    >
+<!--        margin:0;padding:0-->
+        <tr>
+            <td style="width: 50%;  padding: 0 1% 0 3%">
+                <h2>线路运载量</h2>
+                <el-card class="box-card">
+                    <div id="column_chart" style="height: 400px"></div>
+                </el-card>
+            </td>
+<!--             style="padding: 0 3% 0 3%;"-->
+            <td  style="width: 50%; padding: 0 3% 0 1%">
+                <h2>员工使用情况</h2>
+                <el-card class="box-card">
+                    <div id="pie_chart" style="height: 400px"></div>
+                </el-card>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+
+<div id="summarize_table">
+    <div style=" padding: 0 3% 0 3%">
+        <h2>运行概览</h2>
+        <el-card class="box-card" shadow="hover">
+            <div id="test2" style="height: 500%; width: 80%"></div>
+            <el-table
+                    :data="tableData"
+                    stripe>
+                <el-table-column
+                        prop="c_time"
+                        label="班次时间"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="b_code"
+                        label="车牌"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="r_list"
+                        width="400"
+                        label="路线">
+                </el-table-column>
+                <el-table-column
+                        prop="bus_load"
+                        label="车辆载荷">
+                </el-table-column>
+                <el-table-column
+                        prop="u_name"
+                        label="司机">
+                </el-table-column>
+                <el-table-column
+                        prop="u_phone"
+                        label="📞联系电话">
+                </el-table-column>
+            </el-table>
+        </el-card>
+    </div>
+</div>
+
+
+
+<script>
+    const chart_app = new Vue({
+        el: "#chart",
+        data:function(){
+            return {
+            }
+        }
+    })
+    const app = new Vue({
+        el:"#summarize_table",
+        data:function(){
+            return{
+                colData1:[],
+                colData2:[],
+                pieData1:[],
+                pieData2:[],
+                tableData:[],
+                // tableData: this.get_axios()
+            }
+
+        },
+        mounted(){
+            this.get_summarize();
+        },
+        methods:{
+            get_summarize:function(){
+                axios.get('http://localhost:8090/summarize',this.tableData).then(res => {
+                    // res = JSON.parse(JSON.stringify(res))
+                    this.tableData = JSON.parse(res.data.overview);
+                    colData1 = res.data.route_stats[0];
+                    colData2 = res.data.route_stats[1];
+                    pieData1 = res.data.usage_stats[0];
+                    pieData2 = res.data.usage_stats[1];
+                    console.log(this.tableData)
+                    this.draw_column_chart(colData1, colData2);
+                    this.draw_pie_chart(pieData1, pieData2)
+                    })
+            },
+            draw_column_chart:function(pieData1, pieData2){
+                var column_dom = document.getElementById('column_chart');
+                var column_Chart = echarts.init(column_dom, null, {
+                    renderer: 'canvas',
+                    useDirtyRect: false
+                });
+
+                var column_option;
+
+                column_option = {
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
+                        }
+                    },
+                    legend: {},
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: ['学院东门-市政府', '学院东门-纪念馆', '学院南门-信誉楼', '学院北门-第三中学']
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '早班人数',
+                            type: 'bar',
+                            stack: '人数',
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            // data: [70, 30, 38, 39]
+                            data: pieData1
+                        },
+                        {
+                            name: '晚班人数',
+                            type: 'bar',
+                            stack: '人数',
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            // data: [40, 30, 50, 39]
+                            data: pieData2
+                        },
+
+                    ]
+                };
+                if (column_option && typeof column_option === 'object') {
+                    column_Chart.setOption(column_option);
+                }
+
+                window.addEventListener('resize', column_Chart.resize);
+            },
+            draw_pie_chart:function(data1, data2){
+                var pie_dom = document.getElementById("pie_chart");
+                var pieChart = echarts.init(pie_dom, null, {
+                    renderer: 'canvas',
+                    useDirtyRect: false
+                });
+                var pie_option;
+
+                pie_option = {
+                    tooltip: {
+                        trigger: 'item'
+                    },
+                    legend: {
+                        top: '5%',
+                        left: 'center'
+                    },
+                    series: [
+                        {
+                            name: '班车登记人数统计',
+                            type: 'pie',
+                            radius: ['40%', '70%'],
+                            avoidLabelOverlap: false,
+                            label: {
+                                show: false,
+                                position: 'center'
+                            },
+                            emphasis: {
+                                label: {
+                                    show: true,
+                                    fontSize: '40',
+                                    fontWeight: 'bold'
+                                }
+                            },
+                            labelLine: {
+                                show: false
+                            },
+                            data: [
+                                { value: data1, name: '已登记人数' },
+                                { value: data2, name: '未登记人数' },
+                            ]
+                        }
+                    ]
+                };
+
+                if (pie_option && typeof pie_option === 'object') {
+                    pieChart.setOption(pie_option);
+                }
+
+                window.addEventListener('resize', pieChart.resize);
+            }
+        }
+    })
+</script>
+
+</body>
+
+</html>

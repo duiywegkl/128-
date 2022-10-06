@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>提交数据代码- Mengjq_5.21</title>
+
+    <script src="../../public/vue/vue.min.js"></script>
+    <!--1.2 引入element ui-->
+    <link rel="stylesheet" href="../../public/element-ui/index.css">
+    <script src="../../public/element-ui/index.js"></script>
+
+    <!--1.3 引入 axios-->
+    <script src="../../public/axios/axios.min.js"></script>
+    <!--    引入 echart-->
+    <!--    <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>-->
+    <script type="text/javascript" src="../../public/echarts.min.js"></script>
+
+    <script src="../../public/mx-config.js"></script>
+    <style>
+        body{
+            background-color: #e9eff6;
+        }
+    </style>
+</head>
+<body>
+
+<div id="post_form">
+    <el-form
+        :ref="data">
+        <el-label>r_list:</el-label>
+        <input width="50px" name="姓名" id="r_id" v-model="data.r_list"/>
+        <el-button @click="add('http://localhost:3000/route_manage')" type="primary">Add</el-button>
+        <br>
+        <br>
+        <el-label>id:</el-label>
+        <input width="50px" type="number"  v-model="id"/>
+        <el-button @click="edit('http://localhost:3000/route_manage')" type="primary">Edit</el-button>
+        <el-button @click="dele('http://localhost:3000/route_manage')" type="danger">Delete</el-button>
+    </el-form>
+</div>
+<script>
+    const app = new Vue({
+        el: "#post_form",
+        data: function(){
+            return {
+                id:0,
+                data:{"r_list":"!!!!!!"}
+            }
+        },
+        mounted(){
+            // data = JSON.stringify({
+            //     "r_id": '222',
+            //     "r_list": "2222222"
+            // })
+            // this.add(data);
+        },
+        methods:{
+            add(url){
+                axios.post(url, this.data).then(res => {
+                    console.log(this.data);
+                });
+            },
+            edit(url){
+                axios.put(url+'/' + this.id, this.data).then(res => {
+                    console.log(this.data);
+                });
+            },
+            dele(url){
+                axios.delete(url+'/' + this.id, this.data).then(res => {
+                    console.log(this.data);
+                });
+
+            }
+
+
+        }
+    })
+</script>
+</body>
+</html>

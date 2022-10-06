@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>首页</title>
+  <!--2 引入element ui css样式-->
+  <!--2.1 引入element ui-->
+  <link rel="stylesheet"
+        href="../../public/element-ui/index.css">
+  <style>
+      html, body {
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          width: 100%;
+          font-size: 14px;
+          /* html默认高度只有一行, 需要显式声明高度*/
+      }
+      /*布局开始*/
+      .body-container {
+          box-sizing: border-box;
+          height: 100vh;
+          width: 100vw;
+      }
+      .el-aside {
+          height: 100%;
+          box-sizing: border-box;
+          background-color: rgb(48, 65, 86);
+          color: rgb(191, 203, 217);
+      }
+
+      .el-header {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+          border: 0;
+          background-color: rgb(48, 65, 86);
+          color: rgb(191, 203, 217);
+          text-align: right;
+          line-height: 56px;
+      }
+
+      .main-container {
+          box-sizing: border-box;
+          height: calc(100vh - 56px);
+          width: 100%;
+          margin: 0;
+          padding: 0;
+          border: 0;
+      }
+      .el-main {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          width: calc(100vh - 230px);
+      }
+      .el-footer{
+          background-color: #eee;
+          height:40px;
+          line-height: 40px;
+          text-align: center
+      }
+      /*布局结束*/
+
+      /*菜单导航开始*/
+      /*logo*/
+      .logo-title {
+          width: 230px;
+          height: 56px;
+          line-height: 56px;
+          text-align: center;
+          background-color: rgb(48, 65, 86);
+          color: rgb(191, 203, 217);
+      }
+
+      .el-menu {
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          height: 100%;
+          border: 0;
+          background-color: #304156
+      }
+
+      .el-submenu {
+          margin: 0;
+          padding: 0;
+          border: 0;
+      }
+
+      /*打开,选中子菜单*/
+      .el-submenu.is-opened, .el-submenu.is-active {
+          background-color: #000000;
+      !important /*!important使得优先级最大*/
+      }
+
+      /*鼠标滑过子菜单标题*/
+      .el-submenu__title:hover {
+          background-color: #000000;
+      !important /*!important使得优先级最大*/
+      }
+
+      /*鼠标滑过菜单项*/
+      .el-menu-item:hover {
+          cursor: pointer;
+          background-color: #009688;
+      }
+
+      /*选中激活菜单项*/
+      .el-menu-item.is-active {
+          cursor: pointer;
+          background-color: #009688;
+      }
+
+      /*菜单导航结束*/
+      /*内容框架定义*/
+      .mx-iframe {
+          width: 100%;
+          height: 100%;
+      }
+
+      /*内容框架定义结束*/
+  </style>
+</head>
+<body>
+<!--3 创建div容器,挂载vue实例-->
+<div id="app">
+  <el-container class="body-container">
+    <el-header height="56px">
+      <div style="width:100%;border:0px;box-sizing:border-box;margin: 0;padding: 0">
+        <el-row :gutter="20" style="margin: 0;padding: 0">
+          <el-col :span="4" style="text-align: center;font-size: large">
+            企业班车管理系统
+          </el-col>
+          <el-col :span="16">&nbsp;</el-col>
+          <el-col :span="4">
+            <span style="text-align: right; font-size: 12px; padding-right:10px">
+                <i class="el-icon-user-solid"></i>
+                {{ userInfo.userName }}&nbsp;&nbsp;
+                <i title="退出系统" @click="logout" style="cursor: pointer" class="el-icon-switch-button"></i>
+            </span>
+          </el-col>
+        </el-row>
+      </div>
+    </el-header>
+    <el-container class="main-container">
+      <!--左侧导航-->
+      <el-aside width="230px">
+        <el-menu text-color="#BFCBD9"
+                 active-text-color="#BFCBD9"
+                 :default-active="activeMenuItem">
+
+            <el-menu-item index="1-1" @click="menuItemClick('html/summarize.html','汇总页面')"><i class="el-icon-c-scale-to-original"></i>汇总页面</el-menu-item>
+          <el-submenu index="2">
+            <template slot="title"><i class="el-icon-message"></i>信息管理</template>
+            <el-menu-item index="1-2" @click="menuItemClick('html/admin/classes_manage.html','班次管理')"><i class="el-icon-timer"></i>班次管理</el-menu-item>
+            <el-menu-item index="1-3" @click="menuItemClick('html/admin/route_manage.html','线路管理')"><i class="el-icon-location"></i>线路管理</el-menu-item>
+            <el-menu-item index="1-4" @click="menuItemClick('html/admin/user_manage.html','员工管理')"><i class="el-icon-s-custom"></i>员工管理</el-menu-item>
+            <el-menu-item index="1-5" @click="menuItemClick('html/admin/bus_manage.html','车辆管理')"><i class="el-icon-truck"></i>车辆管理</el-menu-item>
+          </el-submenu>
+          <el-menu-item index="3-1" @click="menuItemClick('html/admin/workorder_manage.html','审批管理')"><i class="el-icon-document-checked"></i>审批管理</el-menu-item>
+          <el-menu-item index="3-2" @click="menuItemClick('html/user_workorder.html','员工申请')"><i class="el-icon-document-checked"></i>员工申请</el-menu-item>
+          <el-menu-item index="3-3" @click="menuItemClick('html/driver_workorder.html','司机申请')"><i class="el-icon-document-checked"></i>司机申请</el-menu-item>
+
+        </el-menu>
+      </el-aside>
+      <el-main>
+        <iframe name="mxiframe" id="mxiframe" class="mx-iframe"
+                src="html/summarize.html"
+                width="100%"
+                frameborder="0"
+                align="left"
+                scrolling="auto">
+          <p>您的浏览器不支持iframe标签,请换成chrome或firefox浏览器使用本应用</p>
+        </iframe>
+      </el-main>
+    </el-container>
+  </el-container>
+</div>
+<!--1 从本地引入js库 锁定版本-->
+<!--1.1 引入vue-->
+<script src="../../public/vue/vue.js"></script>
+<!--1.2 引入element ui-->
+<script src="../../public/element-ui/index.js"></script>
+<!--1.3 引入 axios-->
+<script src="../../public/axios/axios.min.js"></script>
+<!--1.4 引入 自定义js包-->
+<script src="../../public/mx-config.js"></script>
+<script>
+  //4 创建vue实例
+  const app = new Vue({
+    el: "#app",
+    data: function () {
+      return {
+        //激活的菜单项
+        activeMenuItem: "1,1",
+        userInfo: {
+          userId: '',
+          userLoginId: '',
+          currentPassword: '',
+          userName: '1111'
+        }
+      }
+    },
+    mounted() {
+      if(sessionStorage.getItem('userInfo')!=null){
+        this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+      }
+    },
+    methods: {
+      menuSelect: function (key, keyPath) {
+        //this.activeMenuItem = key;
+        //console.log(key, keyPath);
+      },
+      //点击导航菜单项,添加一个标签,加载指定的url页面
+      //Vue 应用中，需要使用 el-dialog 弹出一个 iframe 页面，该页面来源于其他项目，这就要解决 Vue 父页面和 iframe 子页面的两个通信问
+      menuItemClick: function (url, menuName) {
+        const myframe = document.getElementById('mxiframe');
+        myframe.src = url;
+      },
+      logout: function () {
+        sessionStorage.removeItem('userInfo');
+        window.location.href = 'html/login/login.html';
+      }
+    }
+  });
+
+</script>
+</body>
+</html>

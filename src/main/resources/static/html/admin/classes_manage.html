@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>班次管理</title>
+<!--    TODO:弹出的页面优化。 外键数据管理-->
+    <!--2 引入element ui css样式-->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui@2.15.6/lib/theme-chalk/index.css">
+</head>
+<body>
+<!--3 创建div容器,挂载vue实例-->
+<div id="app">
+    <!--页面内容区域-->
+    <el-card>
+        <div slot="header" class="clearfix">
+            <span>班次管理</span>
+            <el-button type="primary" size="mini" @click="onAdd()">班次添加</el-button>
+        </div>
+        <el-table
+                :data="tableData"
+                stripe
+                style="width: 100%">
+            <el-table-column
+                    prop="id"
+                    label="序号"
+                    width="120">
+            </el-table-column>
+            <el-table-column
+                    prop="c_id"
+                    label="班次id"
+                    width="120">
+            </el-table-column>
+
+            <el-table-column
+                    prop="c_time"
+                    label="时间"
+                    width="120">
+            </el-table-column>
+            <el-table-column
+                    prop="b_id"
+                    label="车牌"
+                    width="120">
+                <!--传过来的是外键，查表找到外键对应关系-->
+                <template slot-scope="scope">
+                    <div v-for="bus in busData">
+                        <p v-if="scope.row.b_id==bus.b_id">
+                            {{ bus.b_code }}
+                        </p>
+                    </div>
+                </template>
+
+            </el-table-column>
+            <el-table-column
+                    prop="r_list"
+                    label="路线"
+                    width="280">
+                <!--传过来的是外键，查表找到外键对应关系-->
+                <template slot-scope="scope">
+                    <div v-for="route in routeData">
+                        <p v-if="scope.row.r_id==route.r_id">
+                            {{ route.r_list }}
+                        </p>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="u_id"
+                    label="司机姓名"
+                    width="120">
+                <!--传过来的是外键，查表找到外键对应关系-->
+                <template slot-scope="scope">
+                    <div v-for="driver in driverData">
+                        <p v-if="scope.row.u_id==driver.uId">
+                            {{ driver.uName }}
+                        </p>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="u_phone"
+                    label="司机电话"
+                    width="120">
+                <!--传过来的是外键，查表找到外键对应关系-->
+                <template slot-scope="scope">
+                    <div v-for="driver in driverData">
+                        <p v-if="scope.row.u_id==driver.uId">
+                            {{ driver.uPhone }}
+                        </p>
+                    </div>
+                </template>
+            </el-table-column>
+
+            <el-table-column
+                    prop=""
+                    label="操作"
+                    align="center"
+                    width="220">
+                <template slot-scope="scope">
+                    <el-button size="mini" plain type="primary" @click="onEdit(scope.$index)">修改</el-button>
+                    <el-button size="mini" plain type="danger" @click="onDelete(scope.$index)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </el-card>
+    <el-dialog
+            width="80%"
+            :title="dialogEdit.title"
+            :visible.sync="dialogEdit.show"
+            :close-on-click-modal='false'
+            :close-on-press-escape='false'
+            :modal-append-to-body='false'>
+
+        <!--使用el-form组件进行数据添加和修改-->
+        <!--:rules="myrulesEdit"设置表单检验规则-->
+        <el-form ref="form" :model="mymodel" label-width="80px">
+            <el-form-item label="班次时间">
+                <el-input v-model="mymodel.c_time" placeholder="请选择时间">
+
+                </el-input>
+            </el-form-item>
+
+            <el-form-item label="车辆">
+                <el-select v-model="mymodel.b_id">
+                    <div v-for="(item, index) in busData">
+                        <el-option :label="item.b_code" :value="item.b_id"></el-option>
+                    </div>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="司机">
+                <el-select v-model="mymodel.u_id">
+                    <div v-for="(item, index) in driverData">
+                        <el-option :label="item.uName" :value="item.uId"></el-option>
+                    </div>
+                </el-select>
+            </el-form-item>
+
+            <el-form-item label="线路">
+                <el-select v-model="mymodel.r_list" placeholder="请选择时间">
+                    <div v-for="(item,index) in routeData">
+                        <el-option :label="item.r_list" :value="item.id"></el-option>
+                    </div>
+                </el-select>
+            </el-form-item>
+
+
+            <el-form-item class="text_right">
+                <el-button type="primary" @click='onSubmit()'>保 存</el-button>
+                <el-button @click="dialogEdit.show = false">取 消</el-button>
+            </el-form-item>
+
+        </el-form>
+
+    </el-dialog>
+</div>
+
+<!--1.1 引入vue-->
+<script src="../../public/vue/vue.js"></script>
+<!--1.2 引入element ui-->
+<script src="../../public/element-ui/index.js"></script>
+<!--1.3 引入 axios-->
+<script src="../../public/axios/axios.min.js"></script>
+<!--1.4 引入 自定义js包-->
+<script src="../../public/mx-config.js"></script>
+<script>
+    //4 创建vue实例
+    const app = new Vue({
+        el: "#app",
+        data: function () {
+            return {
+                server:'http://localhost:8090',
+                interface:"/classes_manage/",
+                tableData:[],
+
+                driverData:[],
+                routeData:[],
+                busData:[],
+                //控制对话框
+                dialogEdit:{
+                    title:'',
+                    show: false,
+                    isEdit:false,
+                },
+                //定义模型，与表单匹配
+                mymodel:{
+                    c_id: "",
+                    c_time: "",
+                    u_id:"",
+                    r_list: "",
+                    phone:"",
+
+                },
+                //设置一个变量，保存哪行数据被选中了
+                selectItemIndex:-1
+            }
+        },
+        mounted: function () {
+            //初始化表格
+            this.initTable();
+            console.log(this.routeData);
+        },
+        methods: {
+            //初始化表格
+            initTable:function(){
+                //通过axios调用服务器json服务
+                axios.get(this.server + this.interface).then(res => {
+                    this.tableData = res.data;
+                    console.log(this.tableData);
+
+                });
+                axios.get(this.server + "/route").then(resRoute => {
+                    this.routeData = resRoute.data;
+                });
+                axios.get(this.server + "/bus").then(resBus => {
+                    this.busData = resBus.data;
+                });
+                axios.get(this.server + "/user_manage").then(resDriver => {
+                    this.driverData = resDriver.data;
+                });
+            },
+
+            //响应添加按钮
+            onAdd:function () {
+                //清空表单
+                this.mymodel = {
+                    c_id: "",
+                    c_time : "",
+                    u_id:"",
+                    phone:"",
+                    r_list: ""
+                };
+
+                //alert("注册用户");
+                this.dialogEdit.title="注册用户";
+                this.dialogEdit.show = true;
+                this.dialogEdit.isEdit = false;
+            },
+            //响应注册用户对话框 保存按钮
+            onSubmit: function() {
+                if (this.dialogEdit.isEdit===true){
+                    this.onSubmitEdit();
+                }else {
+                    this.onSubmitAdd()
+                }
+            },
+
+            onSubmitAdd:function () {
+                //把表单数据提交到 后台 ，保存到数据库
+                data={
+                    c_id: this.mymodel.c_id,
+                    c_time: this.mymodel.c_time,
+                    u_id:this.mymodel.u_id,
+                    u_phone:this.mymodel.u_phone,
+                    r_list: this.mymodel.r_list
+                }
+                //添加,调用post方法
+                axios.post(this.server + this.interface, data).then(res => {
+                    // 操作成功
+                    this.$message({
+                        message: "保存成功！",
+                        type: "success"
+                    });
+                    //方法1:更新table
+                    this.tableData.push(res.data);
+                    //方法2:更新table:在最后添加一个元素,0表示添加
+                    //this.tableData.splice(this.tableData.length,0,res.data);
+                    //方法3 重新加载
+                    //this.initTable();
+
+                    //关闭对话框
+                    this.dialogEdit.show = false;
+
+                });
+            },
+            //响应修改按钮
+            onEdit:function (index) {
+                //进行数据回填---通过选中的index获得tableData里面的数据
+                this.mymodel = {
+                    id: this.tableData[index].id,
+                    c_id: this.tableData[index].c_id,
+                    c_time: this.tableData[index].c_time,
+                    u_id:this.tableData[index].u_id,
+                    r_list:this.tableData[index]. r_list,
+                };
+
+                console.log(this.mymodel);
+                //保存被选中的行 索引值
+                this.selectItemIndex = index;
+
+                //设置对话框可见
+                this.dialogEdit.title = '修改用户信息';
+                this.dialogEdit.show = true;
+                this.dialogEdit.isEdit = true;
+
+            },
+            //响应修改对话框 保存按钮
+            onSubmitEdit:function (form) {
+                //保存到数据库
+                axios.put(this.server + this.interface + this.mymodel.id, this.mymodel).then(res =>{
+                    // 操作成功
+                    this.$message({
+                        message: "保存成功！",
+                        type: "success"
+                    });
+
+                    // 方法1:更新指定索引的元素
+                    this.tableData.splice(this.selectItemIndex, 1, res.data);
+                    // 方法2:数据重新从服务器加载table数据,这种方法效率差
+                    // this.initTable();
+                    // 关闭对话框
+                    this.dialogEdit.show = false;
+                })
+            },
+            //响应删除按钮
+            onDelete:function (index) {
+                //删除被选中的数据
+                this.$confirm('确认删除该数据吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    // 删除
+                    let id = this.tableData[index].id;
+                    axios.delete(this.server + this.interface + id).then(res => {
+
+                        this.$message("删除成功");
+                        // 删除table起始下标为1，长度为1的一个值
+                        this.tableData.splice(index, 1);
+                    });
+                }).catch(() => {
+
+                });
+
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

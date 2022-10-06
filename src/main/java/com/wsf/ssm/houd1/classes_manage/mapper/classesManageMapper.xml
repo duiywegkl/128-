@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wsf.ssm.houd1.classes_manage.mapper.classesManageMapper">
+    <!--    <resultMap id="selectsummarize" type="com.wsf.ssm.houd1.summarize.model.summarize">-->
+    <!--        <result column=""-->
+    <!--    </resultMap>-->
+    <select id="selectClassm1" resultType="com.wsf.ssm.houd1.classes_manage.model.classesManage" >
+        SELECT c_id,c.r_id,b_id,c_time,r_list
+        FROM classes c JOIN route r on c.r_id = r.r_id
+        WHERE c_id in (SELECT c_id FROM user where u_type =  2)
+           or c_id in (SELECT c_id2 FROM user where u_type = 2)
+    </select>
+    <select id="selectClassm2" resultType="com.wsf.ssm.houd1.classes_manage.model.classesManage" parameterType="java.lang.Integer">
+        SELECT u_id,u_name,u_phone FROM user where u_type = 2 and (c_id = ${c_id} or c_id2 = ${c_id})
+    </select>
+</mapper>

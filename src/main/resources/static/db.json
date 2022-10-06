@@ -1,0 +1,316 @@
+{
+  "summarize": {
+    "route_stats": [
+      [
+        1,
+        2,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "usage_stats": [
+      4,
+      0
+    ],
+    "overview": "[{\"b_code\":\"冀FWD892\",\"b_seats\":50,\"bus_load\":\"1/50\",\"c_id\":1,\"c_time\":\"10:00:00\",\"cun_id\":1,\"id\":567068423,\"r_list\":\"学院东门，香苑小区，第二小学，纪念馆\",\"u_name\":\"qqq\",\"u_phone\":\"123123123\"},{\"b_code\":\"冀FWD890\",\"b_seats\":40,\"bus_load\":\"2/40\",\"c_id\":2,\"c_time\":\"10:15:00\",\"cun_id\":2,\"id\":803316326,\"r_list\":\"学院南门，井上田园，黄骅二中，信誉楼\",\"u_name\":\"qqq\",\"u_phone\":\"123123123\"}]"
+  },
+  "route": [
+    {
+      "r_id": 1,
+      "r_list": "学院东门，香苑小区，第二小学，纪念馆",
+      "id": 1
+    },
+    {
+      "id": 2,
+      "r_id": 2,
+      "r_list": "学院南门，井上田园，黄骅二中，信誉楼"
+    },
+    {
+      "id": 3,
+      "r_id": 3,
+      "r_list": "学院东门，香水小区，图书馆，第三中学"
+    },
+    {
+      "r_id": 4,
+      "r_list": "学院北门，渤海理工，金宝商厦，市政府ff",
+      "id": 4
+    }
+  ],
+  "bus": [
+    {
+      "b_code": "京GVH23",
+      "b_seats": "30",
+      "id": 1,
+      "b_id": 1
+    },
+    {
+      "id": 2,
+      "b_id": 2,
+      "b_code": "冀FWD567",
+      "b_seats": "50"
+    },
+    {
+      "id": 3,
+      "b_id": 3,
+      "b_code": "冀FWD657",
+      "b_seats": "30"
+    },
+    {
+      "b_code": "鲁2332",
+      "b_seats": "22",
+      "id": 4
+    }
+  ],
+  "classes_manage": [
+    {
+      "id": 1,
+      "c_id": "1",
+      "c_time": "10:00sd",
+      "u_id": 1,
+      "r_list": 2
+    },
+    {
+      "id": 2,
+      "c_id": "3",
+      "c_time": "10:20",
+      "u_id": "4",
+      "r_list": 2
+    },
+    {
+      "id": 3,
+      "c_id": "3",
+      "c_time": "10:20",
+      "u_id": "5",
+      "r_list": 4,
+      "b_id": 1
+    },
+    {
+      "id": 4,
+      "c_id": "2",
+      "c_time": "10:30",
+      "u_id": "6",
+      "r_list": 1
+    },
+    {
+      "c_id": "",
+      "c_time": "sdfdf",
+      "u_id": "3",
+      "r_list": 3,
+      "id": 6
+    }
+  ],
+  "user_manage": [
+    {
+      "id": 1,
+      "u_id": 1,
+      "u_name": "孟员工",
+      "u_type": "0",
+      "u_address": "市政府",
+      "c_id": 1,
+      "c_id2": 5,
+      "u_phone": "19920303333"
+    },
+    {
+      "u_id": 2,
+      "u_type": 2,
+      "u_name": "孟司机",
+      "c_id": 2,
+      "c_id2": 6,
+      "u_address": "市政府",
+      "id": 2
+    },
+    {
+      "u_id": "3",
+      "u_name": "李员工",
+      "u_type": "0",
+      "c_id": 3,
+      "c_id2": 7,
+      "u_address": "香水小区",
+      "phone": "333",
+      "id": 3
+    },
+    {
+      "id": 4,
+      "u_id": "4",
+      "u_name": "郑司机",
+      "u_type": "1",
+      "u_address": "",
+      "c_id": 3,
+      "c_id2": 7,
+      "u_phone": "18801002000"
+    },
+    {
+      "u_id": "6",
+      "u_name": "甲司机",
+      "u_type": "1",
+      "c_id": 4,
+      "c_id2": 8,
+      "u_address": "",
+      "phone": "3423423",
+      "id": 6
+    },
+    {
+      "id": 5,
+      "u_id": "5",
+      "u_name": "甄司机",
+      "u_type": "1",
+      "u_address": "",
+      "c_id": 2,
+      "c_id2": 5,
+      "u_phone": "18800233311"
+    }
+  ],
+  "workorder_manage": [
+    {
+      "id": 4,
+      "w_id": 5,
+      "w_date": "2022-5-15 13:52",
+      "w_type": 0,
+      "u_id": 1,
+      "user_commn": "申请下车站为xxxxx",
+      "is_passed": 0,
+      "admin_commn": ""
+    },
+    {
+      "id": 6,
+      "w_id": 6,
+      "w_date": "2022-5-15 13:52",
+      "w_type": 0,
+      "u_id": 1,
+      "user_commn": "申请班次改为xxxxx",
+      "is_passed": 0,
+      "admin_commn": ""
+    },
+    {
+      "id": 2,
+      "w_id": 7,
+      "w_date": "2022-5-15 13:52",
+      "w_type": 1,
+      "u_id": 1,
+      "user_commn": "申请班次改为xxxxx",
+      "is_passed": 1,
+      "admin_commn": ""
+    },
+    {
+      "id": 8,
+      "w_id": 4,
+      "w_date": "2022-5-15 13:52",
+      "w_type": 1,
+      "u_id": 1,
+      "user_commn": "申请班次改为xxxxx",
+      "is_passed": 2,
+      "admin_commn": "没有班次可用"
+    },
+    {
+      "id": 4,
+      "w_id": 8,
+      "w_date": "2022-5-15 13:52",
+      "w_type": 1,
+      "u_id": 1,
+      "user_commn": "申请下车站为xxxxx",
+      "is_passed": 1,
+      "admin_commn": ""
+    }
+  ],
+  "user_workorder": [
+    {
+      "id": 1,
+      "w_id": 1,
+      "w_date": "2022-5-15 13:52",
+      "u_id": 1,
+      "is_passed": 0,
+      "user_commn": "申请在xxx下车",
+      "admin_commn": "111"
+    },
+    {
+      "id": 2,
+      "w_id": 2,
+      "w_date": "2022-6-2 15:21",
+      "u_id": 1,
+      "is_passed": 1,
+      "user_commn": "申请在xxx下车",
+      "admin_commn": "111"
+    },
+    {
+      "id": 3,
+      "w_id": 3,
+      "w_date": "2022-5-11 10:02",
+      "u_id": 1,
+      "is_passed": 2,
+      "user_commn": "申请在xxx下车",
+      "admin_commn": "你再忍忍吧"
+    },
+    {
+      "w_date": "2022-5-24 17:00",
+      "w_type": 0,
+      "u_id": 1,
+      "user_commn": "申请更改下车地址至 祥园小区，望批准",
+      "is_passed": 0,
+      "admin_commn": "",
+      "id": 7
+    },
+    {
+      "w_date": "2022-5-24 17:00",
+      "w_type": 0,
+      "u_id": 1,
+      "user_commn": "22",
+      "is_passed": 0,
+      "admin_commn": "",
+      "id": 8
+    },
+    {
+      "w_date": "2022-06-05 12:51",
+      "w_type": 0,
+      "u_id": 3,
+      "user_commn": "3343",
+      "is_passed": 0,
+      "admin_commn": "",
+      "id": 9
+    },
+    {
+      "w_date": "2022-06-05 12:51",
+      "w_type": 0,
+      "u_id": 3,
+      "user_commn": "2222",
+      "is_passed": 0,
+      "admin_commn": "",
+      "id": 10
+    }
+  ],
+  "driver_workorder": [
+    {
+      "w_id": 1,
+      "w_date": "2022-5-24 17:00",
+      "w_type": 1,
+      "u_id": 2,
+      "user_commn": "2323",
+      "is_passed": 0,
+      "admin_commn": "111",
+      "id": 7
+    },
+    {
+      "w_date": "2022-5-24 17:00",
+      "w_type": 3,
+      "u_id": 3,
+      "user_commn": "请求更改班次",
+      "is_passed": 2,
+      "admin_commn": "再忍忍",
+      "id": 7,
+      "w_id": 7
+    },
+    {
+      "w_date": "2022-06-05 09:52",
+      "w_type": 1,
+      "u_id": 2,
+      "user_commn": "32",
+      "is_passed": 0,
+      "admin_commn": "",
+      "id": 22
+    }
+  ]
+}

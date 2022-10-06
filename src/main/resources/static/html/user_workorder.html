@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户申请工单</title>
+    <!--2 引入element ui css样式-->
+    <link rel="stylesheet" href="../public/element-ui/index.css">
+    <!--1 引入js库 要锁定版本-->
+    <!--1.1 引入vue-->
+    <script src="../public/vue/vue.min.js"></script>
+    <!--1.2 引入element ui-->
+    <script src="../public/element-ui/index.js"></script>
+    <!--1.3 引入 axios-->
+    <script src="../public/axios/axios.min.js"></script>
+    <!--1.4 引入 自定义js包-->
+    <script src="../public/mx-config.js"></script>
+</head>
+
+<body>
+<!--3 创建div容器,挂载vue实例-->
+<div id="app">
+    <el-card>
+        <table border="0" cellpadding="10" cellspacing="0" align="center" width="50%" stripe >
+            <tr>
+                <td colspan="2"> <h2>新增申请</h2></td>
+            </tr>
+            <tr>
+                <td align="right">地址变更为:</td>
+                <td><el-input  placeholder="请输入您的新地址" v-model="address"></el-input></td>
+            </tr>
+            <tr>
+                <td align="right">申请备注:</td>
+                <td><el-input  placeholder="申请在   站下车" v-model="workorder.user_comm"></el-input></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <el-button @click="onSubmitAdd('user_workorder')" type="primary">确认申请</el-button>
+                </td>
+                </tr>
+        </table>
+    </el-card>
+    <!--页面内容区域-->
+    </el-card>
+    <el-card>
+        <div slot="header" class="clearfix">
+            <span>历史申请</span>
+        </div>
+<!--        TODO: 将状态以不同 颜色展现-->
+        <el-table
+                align="center"
+                :data="tableData"
+                stripe
+                style="width: 100%">
+            <el-table-column
+                    prop="id"
+                    label="id"
+                    width="40">
+            </el-table-column>
+            <el-table-column
+                    prop="w_date"
+                    label="时间"
+                    width="150">
+            </el-table-column>
+
+            <el-table-column
+                    prop="u_id"
+                    label="姓名"
+                    width="120">
+                <template slot-scope="scope">
+                    <div v-for="user in userData">
+                        <p v-if="scope.row.u_id==user.u_id">
+                            {{ user.u_name }}
+                        </p>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="is_passed"
+                    label="状态"
+                    default="scope"
+                    width="120">
+                <template scope="scope">
+                    <p v-if="scope.row.is_passed=='0'">
+                        <el-alert
+                                title="审批中"
+                                type="warning"
+                                :closable="false"
+                                center>
+                        </el-alert>
+                    </p>
+                    <p v-if="scope.row.is_passed=='1'">
+                        <el-alert
+                                title="已通过"
+                                type="success"
+                                :closable="false"
+                                center>
+                        </el-alert>
+                    </p>
+                    <p v-if="scope.row.is_passed=='2'">
+                        <el-alert
+                                title="已驳回"
+                                type="error"
+                                :closable="false"
+                                center>
+                        </el-alert>
+                    </p>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="user_comm"
+                    label="申请内容"
+                    width="200">
+            </el-table-column>
+            <el-table-column
+                    prop="admin_comm"
+                    label="驳回意见"
+                    width="120">
+            </el-table-column>
+
+<!--            <el-table-column-->
+<!--                    label="操作"-->
+<!--                    width="280">-->
+<!--&lt;!&ndash;                <div v-if="$index"&ndash;&gt;-->
+<!--                <el-button type="primary" size="mini" @click="onAdd()">修改</el-button>-->
+
+<!--&lt;!&ndash;                <el-button type="primary" size="mini" @click="onDele()">删除</el-button>&ndash;&gt;-->
+<!--            </el-table-column>-->
+
+        </el-table>
+
+    </el-card>
+</div>
+
+<script>
+
+    //4 创建vue实例
+    const app = new Vue({
+        el: "#app",
+        data: function () {
+            return {
+                // TODO: 后端连接时需要修改
+                server:'http://localhost:8090',
+                //定义模型，与表单匹配
+                userId:3,
+                userType: 1,
+                address:'',
+                userData:[],
+                workorder:{
+                    w_date: "",
+                    w_type: "",
+                    u_id: "",
+                    user_comm: "",
+                    is_passed: 0,
+                    admin_comm: ""
+                },
+
+                tableData:[],
+
+                //设置一个变量，保存哪行数据被选中了
+                selectItemIndex:-1
+            }
+        },
+        mounted: function () {
+            //初始化表格
+            this.initTable();
+            this.notice('您的申请已通过', '您于2022-05-13 09:02的申请已通过', 'success')
+        },
+        methods: {
+            //初始化表格
+
+            initTable: function () {
+                //通过axios调用服务器json服务
+                axios.get(this.server + '/user_workorder').then(res => {
+                    this.tableData = res.data;
+                });
+                axios.get(this.server + "/user_manage").then(resUser => {
+                    this.userData = resUser.data;
+                });
+            },
+
+            notice(title, message, type) {
+                this.$notify({
+                    title: title,
+                    message: message,
+                    type: type
+                });
+            },
+
+            //响应添加按钮
+            onSubmitAdd: function () {
+                console.log(this.address);
+                console.log(this.workorder.user_comm);
+                console.log(this.workorder);
+
+                this.workorder.w_type = this.userType;
+                this.workorder.u_id = this.userId;
+                this.workorder.w_date = this.getProjectNum(); // TODO: 改为自动获取
+                if (this.workorder.user_comm == ""){
+                    // this.notice('字段为空', '请填写申请字段', 'info');
+                    this.$message({
+                        message: "字段为空！",
+                        type: "info"
+                    });
+                    return }
+                // 提交至后端
+                axios.post(this.server + '/user_workorder', this.workorder).then(res => {
+                        // 操作成功
+                        this.$message({
+                            message: "保存成功！",
+                            type: "success"
+                        });
+                    //方法1:更新table
+                    this.tableData.push(res.data);
+                    //方法2:更新table:在最后添加一个元素,0表示添加
+                    //this.tableData.splice(this.tableData.length,0,res.data);
+                    //方法3 重新加载
+                    // this.initTable();
+
+                    this.workorder.user_comm = ""
+                    }
+                )
+            },
+            getProjectNum () {
+                const projectTime = new Date() // 当前中国标准时间
+                const Year = projectTime.getFullYear() // 获取当前年份 支持IE和火狐浏览器.
+                const Month = projectTime.getMonth() + 1 // 获取中国区月份
+                const Day = projectTime.getDate() // 获取几号
+                const Hour = projectTime.getHours() < 10 ? "0" + projectTime.getHours()+":" : projectTime.getHours()+":";//获取小时
+                const Date1 = projectTime.getMinutes() < 10 ? "0" + projectTime.getMinutes() : projectTime.getMinutes();//获取分钟
+                const Dates=projectTime.getSeconds() < 10 ? "0" + projectTime.getSeconds() : projectTime.getSeconds();//获取秒
+                let CurrentDate=String(Year);
+                if (Month >= 10) { // 判断月份和几号是否大于10或者小于10
+                    CurrentDate += '-'+Month
+                } else {
+                    CurrentDate += '-0' + Month
+                }
+                if (Day >= 10) {
+                    CurrentDate += '-' + Day
+                } else {
+                    CurrentDate += '-0' + Day
+                }
+                // return CurrentDate+Hour+Date1+Dates;
+                return CurrentDate+" "+Hour+Date1;
+            },
+        }
+    });
+
+</script>
+</body>
+</html>
